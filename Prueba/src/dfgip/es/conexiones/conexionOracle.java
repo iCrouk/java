@@ -7,6 +7,7 @@ public class conexionOracle {
 
 	Connection conn;
 	ResultSet rs=null;
+	PreparedStatement ps;
 	/*Libra*/
 	String usuLibra="LIBRA";
 	String pwdLibra="LIBRA";
@@ -41,7 +42,7 @@ public class conexionOracle {
 			String sql="INSERT INTO DFG_FARMADATA_VENTAS (FECHA,COOP,ARTICULO,CANTIDAD,COD_BRICK,COD_SANIBRICK) "
 					+ "VALUES (?,?,?,?,?,?)";
 			//System.out.println(sql);
-			PreparedStatement ps = conn.prepareStatement(sql);
+			ps = conn.prepareStatement(sql);
 			ps.setString(1, vfecha);
 			ps.setString(2, vcoop);
 			ps.setString(3, varticulo);
@@ -53,13 +54,31 @@ public class conexionOracle {
 			borrar_dfg_ventas_farmadata();
 			System.out.println(e);}
 	}
-	/*
-	public void insertar_dfg_ventas_farmadata2(String vfecha, String vcoop, String varticulo, String vcantidad, String vbrick, String vsanibrick){
+	
+	public void insertarbatch_dfg_ventas_farmadata(){
 		try{
 			String sql="INSERT INTO DFG_FARMADATA_VENTAS (FECHA,COOP,ARTICULO,CANTIDAD,COD_BRICK,COD_SANIBRICK) "
 					+ "VALUES (?,?,?,?,?,?)";
 			//System.out.println(sql);
-			PreparedStatement ps = conn.createStatement(sql);
+			ps = conn.prepareStatement(sql);
+		}catch(Exception e){
+			borrar_dfg_ventas_farmadata();
+			System.out.println(e);}
+	}
+	
+	public void UPDATE_dfg_ventas_farmadata(){
+		try{
+			String sql="UPDATE DFG_FARMADATA_VENTAS SET CANTIDAD = substr(CANTIDAD,1,1) || translate (substr(CANTIDAD,2),'-','0')";
+			//System.out.println(sql);
+			ps = conn.prepareStatement(sql);
+			ps.execute();
+		}catch(Exception e){
+			borrar_dfg_ventas_farmadata();
+			System.out.println(e);}
+	}
+	
+	public void addbatch_dfg_ventas_farmadata(String vfecha, String vcoop, String varticulo, String vcantidad, String vbrick, String vsanibrick){
+		try{
 			ps.setString(1, vfecha);
 			ps.setString(2, vcoop);
 			ps.setString(3, varticulo);
@@ -72,10 +91,26 @@ public class conexionOracle {
 			borrar_dfg_ventas_farmadata();
 			System.out.println(e);}
 	}
-	*/
+	
+	public void ejecutarbacth() throws SQLException{
+		int[] updateCounts = ps.executeBatch();
+	}
+
 	public void borrar_dfg_ventas_farmadata(){
 		try{
 			String sql="DELETE FROM DFG_FARMADATA_VENTAS";
+					
+			//System.out.println(sql);
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.executeQuery();
+		}catch(Exception e){
+			System.out.println(e);}
+	}
+	
+	public void borrar_dfg_ventas_cofano(){
+		try{
+			String sql="DELETE FROM DFG_FARMADATA_VENTAS"
+					+"WHERE COOP IN ('"+0322+"','"+0364+"')";
 					
 			//System.out.println(sql);
 			PreparedStatement ps = conn.prepareStatement(sql);

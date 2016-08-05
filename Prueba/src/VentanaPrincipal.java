@@ -77,7 +77,7 @@ public class VentanaPrincipal {
 	public VentanaPrincipal() {
 		initialize();
 	}
-	/**
+	/***
 	 * Funcion que inicializa la fecha
 	 */
 	public void setfecha(String vdia, String vmes, String vano){
@@ -85,25 +85,15 @@ public class VentanaPrincipal {
 		this.mes = vmes;
 		this.ano = vano;		
 	}
-	/*
-	public void  ejecutarbat() throws IOException{
-		try{
-			Runtime rt = Runtime.getRuntime();
-			for (int i=0; i<this.Cooperativas().size();i++){
-				String command = cabeceraDirectorio+"/"+Cooperativas().get(i)+"/FTP/ftp_ims.bat";
-				rt.exec(command);
-			}
-		}catch(Exceception){}
-	}
-	*/
+	
 	public String getfecha(){
 		return this.ano+this.mes+this.dia;
 	}
-	/**
+	/***
 	 * Lista de Cooperativas
 	 * 
 	 */
-	public ArrayList Cooperativas(){
+	public ArrayList<String> Cooperativas(){
 		
 		CoopActivas = new <String> ArrayList(); 
 		
@@ -291,7 +281,9 @@ public class VentanaPrincipal {
 				long inicio, fin;
 				inicio = System.currentTimeMillis();
 				LeerFichero lf= new LeerFichero();
-				lf.insertarFicheroVentasEnBD(ventas);
+				//lf.leerFichero(ventas);
+				lf.insertarBatchFicheroVentasEnBD(ventas);
+			
 				conexionOracle co= new conexionOracle();
 				//Escribir Bricks
 				System.out.println("-- Generando fichero Bricks.....");
@@ -306,6 +298,7 @@ public class VentanaPrincipal {
 				fin = System.currentTimeMillis() - inicio;
 				System.out.println("-- Final (Tiempo en ejecucucion "+ fin+" milisegundos)");
 				co.cerrarConexion();
+
 			 }
 			
 		}//end for
