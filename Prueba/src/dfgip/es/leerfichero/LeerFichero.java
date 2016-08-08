@@ -27,7 +27,8 @@ public class LeerFichero {
 	            		" Articulo: "+linea.substring(9,16)+
 	            		" Cantidad: "+linea.substring(61,67)+
 	            		" BRICKS: "+linea.substring(73,78)+
-	            		" SANIBRIKS: "+linea.substring(80,86));
+	            		" SANIBRIKS: "+linea.substring(80,86)+
+	            		" Longitud: "+linea.length());
 	            contador++;
 	         }
 	         System.out.println("Num.Filas: "+contador);
@@ -101,14 +102,16 @@ public class LeerFichero {
 	         co = new conexionOracle();
 	         co.insertarbatch_dfg_ventas_farmadata();
 	         while((linea=br.readLine())!=null){
-	            String v_fecha = "20"+linea.substring(0,6);
-	            String v_coop = "0"+linea.substring(6,9);
-	            String v_articulo = "000000"+linea.substring(9,16);
-	            String v_cantidad = linea.substring(61,67);
-	            String v_brick = linea.substring(73,78);
-	            String v_sanibrick = linea.substring(80,86);
+	        	if(linea.length() == 86){
+	        		String v_fecha = "20"+linea.substring(0,6);
+	        		String v_coop = "0"+linea.substring(6,9);
+	        		String v_articulo = "000000"+linea.substring(9,16);
+	        		String v_cantidad = linea.substring(61,67);
+	        		String v_brick = linea.substring(73,78);
+	        		String v_sanibrick = linea.substring(80,86);
 	            //insertarBATCH en la BD
-	            co.addbatch_dfg_ventas_farmadata(v_fecha, v_coop, v_articulo, v_cantidad, v_brick, v_sanibrick);
+	            	co.addbatch_dfg_ventas_farmadata(v_fecha, v_coop, v_articulo, v_cantidad, v_brick, v_sanibrick);
+	            }
 	            contador++;  
 	         }
 	         co.ejecutarbacth();
