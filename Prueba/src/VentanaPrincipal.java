@@ -286,17 +286,23 @@ public class VentanaPrincipal {
 			
 				conexionOracle co= new conexionOracle();
 				//Escribir Bricks
+				txtAAcciones.setText(ventas);
 				System.out.println("-- Generando fichero Bricks.....");
+				txtAAcciones.setText("-- Generando fichero Bricks.....");
 				String bricks = "ESW0"+comprobarCodigos(this.Cooperativas().get(i).toString().substring(0,2)+this.Cooperativas().get(i).toString().substring(3,4))+"D"+this.getfecha()+"-"+this.getfecha()+"-"+"001-S.TXT";
 				int lineasBrick = lf.escribirFicheroBricks(cabeceraDirectorio+"\\"+this.Cooperativas().get(i).toString(),bricks , co.bricks());
 				System.out.println("-- Generado fichero Bricks con "+lineasBrick+" lineas.");
+				txtAAcciones.setText("-- Generado fichero Bricks con "+lineasBrick+" lineas.");
 				//Escribir SaniBricks
 				System.out.println("-- Generadno fichero SaniBricks.....");
+				txtAAcciones.setText("-- Generadno fichero SaniBricks.....");
 				String sanibrick = "DSB0"+comprobarCodigos(this.Cooperativas().get(i).toString().substring(0,2)+this.Cooperativas().get(i).toString().substring(3,4))+"D"+this.getfecha()+"-"+this.getfecha()+"-"+"001-S.TXT";
 				int lineasSBrick = lf.escribirFicheroSanibricks(cabeceraDirectorio+"\\"+this.Cooperativas().get(i).toString(),sanibrick, co.sanibricks());
 				System.out.println("-- Generado fichero SaniBricks con "+lineasSBrick+" lineas.");
+				txtAAcciones.setText("-- Generado fichero SaniBricks con "+lineasSBrick+" lineas.");
 				fin = System.currentTimeMillis() - inicio;
 				System.out.println("-- Final (Tiempo en ejecucucion "+ fin+" milisegundos)");
+				txtAAcciones.setText("-- Final (Tiempo en ejecucucion "+ fin+" milisegundos)");
 				co.cerrarConexion();
 
 			 }

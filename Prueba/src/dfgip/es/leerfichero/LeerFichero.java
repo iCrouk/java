@@ -5,7 +5,10 @@ import java.sql.*;
 import dfgip.es.conexiones.*;
 
 public class LeerFichero {
-	
+/***
+ * 	
+ * @param vFile lectura del fichero y lo printa en pantalla. Solamento lo uso para ver como lee el fichero.
+ */
 	public void leerFichero(String vFile){
 		File archivo = null;
 	    FileReader fr = null;
@@ -78,7 +81,11 @@ public class LeerFichero {
 	      }
 	}
 */
-	
+	/***
+	 * 
+	 * @param vFile recibe fichero a leer. 
+	 * Lee el fichero y lo inserta en la bd en la tabla DFG_farmadata_ventas.
+	 */
 	public void insertarBatchFicheroVentasEnBD(String vFile){
 		File archivo = null;
 	    FileReader fr = null;
@@ -116,7 +123,10 @@ public class LeerFichero {
 	         }
 	         co.ejecutarbacth();
 	         //co.borrar_dfg_ventas_cofano();
-	         co.UPDATE_dfg_ventas_farmadata();
+	         co.UPDATE_correcion_cantidad();
+	         co.UPDATE_correcion_cod_brick();
+	         co.UPDATE_correcion_cofarca();
+	         co.UPDATE_correcion_jaen();
 	         co.cerrarConexion();  
 	         System.out.println("--Numero de lineas importadas = "+ contador);
 	      }
@@ -125,6 +135,13 @@ public class LeerFichero {
 	      }
 	}
 	
+	/***
+	 * 
+	 * @param vruta la ruta donde tiene que escribir el fichero.
+	 * @param vnombre el nombre del fichero
+	 * @param vrs el resultset de valores a escribir
+	 * @return devuelve número de filas insertadas.
+	 */
 	public int escribirFicheroBricks(String vruta, String vnombre,ResultSet vrs){
 		int contador=0;
 		try{ 
@@ -146,14 +163,13 @@ public class LeerFichero {
         }
 		
 		return contador;
-	}
+	}//fin_escribirFicheroBricks
 	/***
 	 * 
-	 * @param vruta
-	 * @param vnombre
-	 * @param vrs
-	 * @return contador
-	 * Escribe el fichero de Sanibricks en el directorio que le toca.
+	 * @param vruta la ruta donde tiene que escribir el fichero
+	 * @param vnombre el nombre del fichero
+	 * @param vrs el resultset de valores a escribir
+	 * @return devuelve número de filas insertadas.
 	 */
 	public int escribirFicheroSanibricks(String vruta, String vnombre,ResultSet vrs){
 		int contador=0;
@@ -174,7 +190,5 @@ public class LeerFichero {
             e.printStackTrace();
         }
 		return contador;
-	}
-
-
-}
+	}//fin_escribirFicheroSanibricks
+}//fin_class_LeerFichero

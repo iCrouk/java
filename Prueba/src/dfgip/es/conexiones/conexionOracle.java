@@ -36,47 +36,90 @@ public class conexionOracle {
 	public Connection getConexion(){
 		return conn;
 	}
-	
+	/***
+	 * 
+	 * @param vfecha fecha a insertar en la BD.
+	 * @param vcoop Cooperativa a insertar en la BD.
+	 * @param varticulo Articulo a insertar en la BD.
+	 * @param vcantidad Cantidad a insertar en la BD.
+	 * @param vbrick Brick a insertar en la BD.
+	 * @param vsanibrick SaniBrick a insertar en la BD.
+	 * Esta función no se utiliza para la inserccion de Lineas y que su ejecucion relentiza mucho el proceso.
+	 */
 	public void insertar_dfg_ventas_farmadata(String vfecha, String vcoop, String varticulo, String vcantidad, String vbrick, String vsanibrick){
 		try{
 			String sql="INSERT INTO DFG_FARMADATA_VENTAS (FECHA,COOP,ARTICULO,CANTIDAD,COD_BRICK,COD_SANIBRICK) "
 					+ "VALUES (?,?,?,?,?,?)";
-			//System.out.println(sql);
 			ps = conn.prepareStatement(sql);
-			ps.setString(1, vfecha);
-			ps.setString(2, vcoop);
-			ps.setString(3, varticulo);
-			ps.setString(4, vcantidad);
-			ps.setString(5, vbrick);
-			ps.setString(6, vsanibrick);
+			ps.setString(1, vfecha);ps.setString(2, vcoop);ps.setString(3, varticulo);
+			ps.setString(4, vcantidad);ps.setString(5, vbrick);ps.setString(6, vsanibrick);
 			ps.executeUpdate();
 		}catch(Exception e){
 			borrar_dfg_ventas_farmadata();
 			System.out.println(e);}
 	}
-	
+	/***
+	 * Funcion que prepara la sentencia de INSERT antes de generar todos los BATCH, pa su posterior ejecucion.
+	 */
 	public void insertarbatch_dfg_ventas_farmadata(){
 		try{
 			String sql="INSERT INTO DFG_FARMADATA_VENTAS (FECHA,COOP,ARTICULO,CANTIDAD,COD_BRICK,COD_SANIBRICK) "
 					+ "VALUES (?,?,?,?,?,?)";
-			//System.out.println(sql);
 			ps = conn.prepareStatement(sql);
 		}catch(Exception e){
 			borrar_dfg_ventas_farmadata();
 			System.out.println(e);}
 	}
 	
-	public void UPDATE_dfg_ventas_farmadata(){
+	public void UPDATE_correcion_cantidad(){
 		try{
 			String sql="UPDATE DFG_FARMADATA_VENTAS SET CANTIDAD = substr(CANTIDAD,1,1) || translate (substr(CANTIDAD,2),'-','0')";
-			//System.out.println(sql);
 			ps = conn.prepareStatement(sql);
 			ps.execute();
 		}catch(Exception e){
 			borrar_dfg_ventas_farmadata();
 			System.out.println(e);}
 	}
-	
+	/***
+	 * Correcion cuando los Sanibricks son 99999 pone los bricks a 99999.
+	*/
+	public void UPDATE_correcion_cod_brick(){
+		try{
+			String sql="UPDATE DFG_FARMADATA_VENTAS SET COD_BRICK='99999' WHERE COD_SANIBRICK='999999'";
+			ps = conn.prepareStatement(sql);
+			ps.execute();
+		}catch(Exception e){
+			borrar_dfg_ventas_farmadata();
+			System.out.println(e);}
+	}
+	public void UPDATE_correcion_jaen(){
+		try{
+			String sql="UPDATE DFG_FARMADATA_VENTAS SET COOP='0234' WHERE COOP='0232'";
+			ps = conn.prepareStatement(sql);
+			ps.execute();
+		}catch(Exception e){
+			borrar_dfg_ventas_farmadata();
+			System.out.println(e);}
+	}
+	public void UPDATE_correcion_cofarca(){
+		try{
+			String sql="UPDATE DFG_FARMADATA_VENTAS SET COOP='0354' WHERE COOP='0352'";
+			ps = conn.prepareStatement(sql);
+			ps.execute();
+		}catch(Exception e){
+			borrar_dfg_ventas_farmadata();
+			System.out.println(e);}
+	}
+	/***
+	 * 
+	 * @param vfecha fecha a insertar en la BD.
+	 * @param vcoop Cooperativa a insertar en la BD.
+	 * @param varticulo Articulo a insertar en la BD.
+	 * @param vcantidad Cantidad a insertar en la BD.
+	 * @param vbrick Brick a insertar en la BD.
+	 * @param vsanibrick SaniBrick a insertar en la BD.
+	 * Esta función se utiliza para la generar el BATCH.
+	 */
 	public void addbatch_dfg_ventas_farmadata(String vfecha, String vcoop, String varticulo, String vcantidad, String vbrick, String vsanibrick){
 		try{
 			ps.setString(1, vfecha);
@@ -95,7 +138,9 @@ public class conexionOracle {
 	public void ejecutarbacth() throws SQLException{
 		int[] updateCounts = ps.executeBatch();
 	}
-
+	/***
+	 * Borrar el contenido de la tabla DFG_FARMADATA_VENTAS.
+	 */
 	public void borrar_dfg_ventas_farmadata(){
 		try{
 			String sql="DELETE FROM DFG_FARMADATA_VENTAS";
@@ -118,7 +163,10 @@ public class conexionOracle {
 		}catch(Exception e){
 			System.out.println(e);}
 	}
-	
+	/***
+	 * 
+	 * @return el ResultSet de SaniBricks
+	 */
 	public ResultSet sanibricks(){
 		try{
 			rs = null;
@@ -135,7 +183,10 @@ public class conexionOracle {
 			System.out.println(e);}
 		return rs;
 	}
-	
+	/***
+	 * 
+	 * @return el ResultSet de Bricks
+	 */
 	public ResultSet bricks(){
 		try{
 			rs = null;
@@ -151,7 +202,10 @@ public class conexionOracle {
 			System.out.println(e);}
 		return rs;
 	}
-	
+	/***
+	 * 
+	 * @return conxion = null
+	 */
 	public Connection cerrarConexion(){
 		try{
 			conn.close();
