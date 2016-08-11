@@ -100,14 +100,14 @@ public class LeerFichero {
 	         
 	         //Conexion BD
 	         conexionOracle co= new conexionOracle();
-	         co.borrar_dfg_ventas_farmadata();
+	         co.borrarDfgVentasFarmadata();
 	         co.cerrarConexion();
 
 	         // Lectura del fichero
 	         String linea;
 	         int contador = 0;
 	         co = new conexionOracle();
-	         co.insertarbatch_dfg_ventas_farmadata();
+	         co.insertarBatchdDfgVentasFarmadata();
 	         while((linea=br.readLine())!=null){
 	        	if(linea.length() == 86){
 	        		String v_fecha = "20"+linea.substring(0,6);
@@ -117,16 +117,16 @@ public class LeerFichero {
 	        		String v_brick = linea.substring(73,78);
 	        		String v_sanibrick = linea.substring(80,86);
 	            //insertarBATCH en la BD
-	            	co.addbatch_dfg_ventas_farmadata(v_fecha, v_coop, v_articulo, v_cantidad, v_brick, v_sanibrick);
+	            	co.addBatchDfgVentasFarmadata(v_fecha, v_coop, v_articulo, v_cantidad, v_brick, v_sanibrick);
 	            }
 	            contador++;  
 	         }
-	         co.ejecutarbacth();
+	         co.ejecutarBacth();
 	         //co.borrar_dfg_ventas_cofano();
-	         co.UPDATE_correcion_cantidad();
-	         co.UPDATE_correcion_cod_brick();
-	         co.UPDATE_correcion_cofarca();
-	         co.UPDATE_correcion_jaen();
+	         co.correcionCantidad();
+	         co.correcionCantidad();
+	         co.correcionCoopCofarca();
+	         co.correcionCoopJaen();
 	         co.cerrarConexion();  
 	         System.out.println("--Numero de lineas importadas = "+ contador);
 	      }

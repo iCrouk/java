@@ -20,7 +20,9 @@ public class conexionOracle {
 	String usuPruebas="LIBRAU";
 	String pwdPruebas="LIBRAU";
 	String urlPruebas = "jdbc:oracle:thin:@192.168.1.37:1521:LIBRAUFG";
-	
+	/***
+	 * Clase constructor
+	 */
 	public conexionOracle(){
 		try{
 			DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
@@ -46,7 +48,7 @@ public class conexionOracle {
 	 * @param vsanibrick SaniBrick a insertar en la BD.
 	 * Esta función no se utiliza para la inserccion de Lineas y que su ejecucion relentiza mucho el proceso.
 	 */
-	public void insertar_dfg_ventas_farmadata(String vfecha, String vcoop, String varticulo, String vcantidad, String vbrick, String vsanibrick){
+	public void insertarDfgVentasFarmadata(String vfecha, String vcoop, String varticulo, String vcantidad, String vbrick, String vsanibrick){
 		try{
 			String sql="INSERT INTO DFG_FARMADATA_VENTAS (FECHA,COOP,ARTICULO,CANTIDAD,COD_BRICK,COD_SANIBRICK) "
 					+ "VALUES (?,?,?,?,?,?)";
@@ -55,59 +57,65 @@ public class conexionOracle {
 			ps.setString(4, vcantidad);ps.setString(5, vbrick);ps.setString(6, vsanibrick);
 			ps.executeUpdate();
 		}catch(Exception e){
-			borrar_dfg_ventas_farmadata();
+			borrarDfgVentasFarmadata();
 			System.out.println(e);}
 	}
 	/***
 	 * Funcion que prepara la sentencia de INSERT antes de generar todos los BATCH, pa su posterior ejecucion.
 	 */
-	public void insertarbatch_dfg_ventas_farmadata(){
+	public void insertarBatchdDfgVentasFarmadata(){
 		try{
 			String sql="INSERT INTO DFG_FARMADATA_VENTAS (FECHA,COOP,ARTICULO,CANTIDAD,COD_BRICK,COD_SANIBRICK) "
 					+ "VALUES (?,?,?,?,?,?)";
 			ps = conn.prepareStatement(sql);
 		}catch(Exception e){
-			borrar_dfg_ventas_farmadata();
+			borrarDfgVentasFarmadata();
 			System.out.println(e);}
 	}
 	
-	public void UPDATE_correcion_cantidad(){
+	public void correcionCantidad(){
 		try{
 			String sql="UPDATE DFG_FARMADATA_VENTAS SET CANTIDAD = substr(CANTIDAD,1,1) || translate (substr(CANTIDAD,2),'-','0')";
 			ps = conn.prepareStatement(sql);
 			ps.execute();
 		}catch(Exception e){
-			borrar_dfg_ventas_farmadata();
+			borrarDfgVentasFarmadata();
 			System.out.println(e);}
 	}
 	/***
 	 * Correcion cuando los Sanibricks son 99999 pone los bricks a 99999.
 	*/
-	public void UPDATE_correcion_cod_brick(){
+	public void correcionCodBrick(){
 		try{
 			String sql="UPDATE DFG_FARMADATA_VENTAS SET COD_BRICK='99999' WHERE COD_SANIBRICK='999999'";
 			ps = conn.prepareStatement(sql);
 			ps.execute();
 		}catch(Exception e){
-			borrar_dfg_ventas_farmadata();
+			borrarDfgVentasFarmadata();
 			System.out.println(e);}
 	}
-	public void UPDATE_correcion_jaen(){
+	/***
+	 * Correcion de la numeracion de la coop. de 0232 a 0234.
+	 */
+	public void correcionCoopJaen(){
 		try{
 			String sql="UPDATE DFG_FARMADATA_VENTAS SET COOP='0234' WHERE COOP='0232'";
 			ps = conn.prepareStatement(sql);
 			ps.execute();
 		}catch(Exception e){
-			borrar_dfg_ventas_farmadata();
+			borrarDfgVentasFarmadata();
 			System.out.println(e);}
 	}
-	public void UPDATE_correcion_cofarca(){
+	/***
+	 * Correcion de la numeracion de la coop. de 0352 a 0354.
+	 */
+	public void correcionCoopCofarca(){
 		try{
 			String sql="UPDATE DFG_FARMADATA_VENTAS SET COOP='0354' WHERE COOP='0352'";
 			ps = conn.prepareStatement(sql);
 			ps.execute();
 		}catch(Exception e){
-			borrar_dfg_ventas_farmadata();
+			borrarDfgVentasFarmadata();
 			System.out.println(e);}
 	}
 	/***
@@ -120,7 +128,7 @@ public class conexionOracle {
 	 * @param vsanibrick SaniBrick a insertar en la BD.
 	 * Esta función se utiliza para la generar el BATCH.
 	 */
-	public void addbatch_dfg_ventas_farmadata(String vfecha, String vcoop, String varticulo, String vcantidad, String vbrick, String vsanibrick){
+	public void addBatchDfgVentasFarmadata(String vfecha, String vcoop, String varticulo, String vcantidad, String vbrick, String vsanibrick){
 		try{
 			ps.setString(1, vfecha);
 			ps.setString(2, vcoop);
@@ -131,17 +139,17 @@ public class conexionOracle {
 			ps.addBatch();		
 			
 		}catch(Exception e){
-			borrar_dfg_ventas_farmadata();
+			borrarDfgVentasFarmadata();
 			System.out.println(e);}
 	}
 	
-	public void ejecutarbacth() throws SQLException{
+	public void ejecutarBacth() throws SQLException{
 		int[] updateCounts = ps.executeBatch();
 	}
 	/***
 	 * Borrar el contenido de la tabla DFG_FARMADATA_VENTAS.
 	 */
-	public void borrar_dfg_ventas_farmadata(){
+	public void borrarDfgVentasFarmadata(){
 		try{
 			String sql="DELETE FROM DFG_FARMADATA_VENTAS";
 					
@@ -152,11 +160,9 @@ public class conexionOracle {
 			System.out.println(e);}
 	}
 	
-	public void borrar_dfg_ventas_cofano(){
+	public void correcoinDfgVentasCofano(){
 		try{
-			String sql="DELETE FROM DFG_FARMADATA_VENTAS"
-					+"WHERE COOP IN ('"+0322+"','"+0364+"')";
-					
+			String sql="DELETE FROM DFG_FARMADATA_VENTAS WHERE COOP IN ('0322','0364')";		
 			//System.out.println(sql);
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.executeQuery();
@@ -179,7 +185,7 @@ public class conexionOracle {
 			PreparedStatement ps = conn.prepareStatement(sql);
 			rs = ps.executeQuery();	
 		}catch(Exception e){
-			borrar_dfg_ventas_farmadata();
+			borrarDfgVentasFarmadata();
 			System.out.println(e);}
 		return rs;
 	}
@@ -216,29 +222,4 @@ public class conexionOracle {
 		conn =null;
 		return conn;
 	}//endFunction
-	
-	public ResultSet buscar(String vTabla){
-		
-		try{
-			rs = null;
-			String sql="SELECT * FROM "+vTabla;
-			//System.out.println(sql);
-			PreparedStatement ps = conn.prepareStatement(sql);
-			rs= ps.executeQuery();
-		
-		}catch(Exception e){
-			System.out.println(e);}
-		return rs;
-	}
-	
-	public void printar(){
-		try{
-		 while(rs.next()){
-			 System.out.println("'"+rs.getString(2)+"',,1','"+rs.getString("COD_BRICK")+"',,,'"+rs.getString("ARTICULO")+",'1','1',,"+rs.getString(4)+",,,'"+rs.getString(1)+"'");
-		 }
-		}catch (Exception e){
-			System.out.println(e);
-		}
-	}
-	
 }

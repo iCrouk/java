@@ -146,7 +146,12 @@ public class VentanaPrincipal {
 		
 		return CoopActivas;
 	}
-	
+	/***
+	 * 
+	 * @param pDirectorio
+	 * @param pDatos
+	 * @param pFicheroZipName
+	 */
 	public void crearZip (String pDirectorio, ArrayList<String> pDatos, String pFicheroZipName){
 		
 		byte[] buffer = new byte[1024];
@@ -172,7 +177,11 @@ public class VentanaPrincipal {
     		zos.close();
 		}catch(Exception e){e.printStackTrace();}
 	}
-
+/***
+ * 
+ * @param pCodigo recibe un codigo y si es uno de los que hay que cambiar lo cambia y lo devuelve cambiado
+ * @return
+ */
 	public String comprobarCodigos(String pCodigo){
 		
 		String codigo="";
@@ -196,7 +205,9 @@ public class VentanaPrincipal {
 		}
 		return codigo;
 	}
-	
+	/***
+	 * hace el cip
+	 */
 	public void hacerZip(){
 		
 		//ArrayList <String> logs = new ArrayList();
@@ -250,7 +261,13 @@ public class VentanaPrincipal {
 		}
 		txtAAcciones.setText(txtAAcciones.getText()+"\nCOMPROBAR TODOS LOS ZIP ANTES DE BORRAR LOS FICHEROS,GRACIAS\n");	
 	}
-	
+	/***
+	 * 
+	 * @param pDirectorio el directorio de lectura
+	 * @param pCooperativa la coop. de lectura
+	 * @param pFecha fecha de del fichero a leer
+	 * @return si exite el fichero a leer
+	 */
 	public String existeFicheroVentas(String pDirectorio, String pCooperativa, String pFecha){
 		
 		String fichero= null;
@@ -265,14 +282,16 @@ public class VentanaPrincipal {
 		for (int x=0;x<ficheros.length;x++){
 			if (ficheros[x].equalsIgnoreCase(ficheroABuscar)){
 				System.out.println("...Procesando Lineas, paciencia...");
+				txtAAcciones.setText(txtAAcciones.getText()+"...Procesando Lineas, paciencia... \n");
 				fichero = pDirectorio+"\\"+ficheroABuscar;
-			}//endif
-				
+			}//endif	
 		}//end for
 		
 		return fichero;
 	}
-	
+	/***
+	 * Funcion que agrupa la creacion de brick y sanibricks
+	 */
 	public void crearBirckySanibrick(){
 		
 		for (int i=0; i<this.Cooperativas().size();i++){
@@ -283,28 +302,26 @@ public class VentanaPrincipal {
 				LeerFichero lf= new LeerFichero();
 				//lf.leerFichero(ventas);
 				lf.insertarBatchFicheroVentasEnBD(ventas);
-			
 				conexionOracle co= new conexionOracle();
 				//Escribir Bricks
 				txtAAcciones.setText(ventas);
 				System.out.println("-- Generando fichero Bricks.....");
-				txtAAcciones.setText("-- Generando fichero Bricks.....");
+				//txtAAcciones.setText(txtAAcciones.getText()+"-- Generando fichero Bricks.....\n");
 				String bricks = "ESW0"+comprobarCodigos(this.Cooperativas().get(i).toString().substring(0,2)+this.Cooperativas().get(i).toString().substring(3,4))+"D"+this.getfecha()+"-"+this.getfecha()+"-"+"001-S.TXT";
 				int lineasBrick = lf.escribirFicheroBricks(cabeceraDirectorio+"\\"+this.Cooperativas().get(i).toString(),bricks , co.bricks());
 				System.out.println("-- Generado fichero Bricks con "+lineasBrick+" lineas.");
-				txtAAcciones.setText("-- Generado fichero Bricks con "+lineasBrick+" lineas.");
+				txtAAcciones.setText(txtAAcciones.getText()+"-- Generado fichero Bricks con "+lineasBrick+" lineas.\n");
 				//Escribir SaniBricks
 				System.out.println("-- Generadno fichero SaniBricks.....");
-				txtAAcciones.setText("-- Generadno fichero SaniBricks.....");
+				//txtAAcciones.setText(txtAAcciones.getText()+"-- Generadno fichero SaniBricks.....\n");
 				String sanibrick = "DSB0"+comprobarCodigos(this.Cooperativas().get(i).toString().substring(0,2)+this.Cooperativas().get(i).toString().substring(3,4))+"D"+this.getfecha()+"-"+this.getfecha()+"-"+"001-S.TXT";
 				int lineasSBrick = lf.escribirFicheroSanibricks(cabeceraDirectorio+"\\"+this.Cooperativas().get(i).toString(),sanibrick, co.sanibricks());
 				System.out.println("-- Generado fichero SaniBricks con "+lineasSBrick+" lineas.");
-				txtAAcciones.setText("-- Generado fichero SaniBricks con "+lineasSBrick+" lineas.");
+				txtAAcciones.setText(txtAAcciones.getText()+"-- Generado fichero SaniBricks con "+lineasSBrick+" lineas.\n");
 				fin = System.currentTimeMillis() - inicio;
-				System.out.println("-- Final (Tiempo en ejecucucion "+ fin+" milisegundos)");
-				txtAAcciones.setText("-- Final (Tiempo en ejecucucion "+ fin+" milisegundos)");
+				System.out.println("-- Final (Tiempo en ejecucucion "+ fin/1000+" milisegundos)");
+				txtAAcciones.setText(txtAAcciones.getText()+"-- Final [Tiempo en ejecucucion "+ fin/1000+" segundos]\n");
 				co.cerrarConexion();
-
 			 }
 			
 		}//end for
@@ -352,7 +369,9 @@ public class VentanaPrincipal {
            }
         }
 	}
-	
+	/***
+	 * Elimina los ficheros del directorio.
+	 */
 	public void eliminarFicheros(){
 		
 		txtAAcciones.setText(null);
