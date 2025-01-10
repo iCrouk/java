@@ -13,7 +13,7 @@ import java.util.Scanner;
 public class Fechas {
 	static Calendar mycalendar;
 	
-	int dia_i,mes_i,año_i;
+	int dia_i,mes_i,ano_i;
 	String dia_s,mes_s;
 	
 	public Fechas() {
